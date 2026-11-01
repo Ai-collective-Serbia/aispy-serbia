@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI SPY · Nominuj agenta</title>
+<meta name="description" content="AI Collective Serbia: nominuj govornika za AI SPY, 29. novembar 2026, Startit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#172124; --panel:#232e31; --line:#34433f;
+  --teal:#5fb3a3; --teal-d:#2f6b62; --yellow:#f2c230; --red:#e0604f;
+  --cream:#efe7d4; --muted:#9aa7a3;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --display:'Bebas Neue',Impact,sans-serif;
+  --sans:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--cream);font-family:var(--sans);line-height:1.5;
+  background-image:
+    radial-gradient(ellipse at 80% -10%, rgba(95,179,163,.18), transparent 55%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 1px, transparent 1px 28px);
+  min-height:100vh}
+.wrap{max-width:880px;margin:0 auto;padding:28px 16px 64px}
+.top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.lang button{background:none;border:1px solid var(--line);color:var(--muted);font:inherit;padding:4px 9px;cursor:pointer;border-radius:4px}
+.lang button[aria-pressed=true]{color:var(--bg);background:var(--yellow);border-color:var(--yellow)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow);margin:0 0 8px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(64px,13vw,120px);line-height:.9;margin:0;letter-spacing:.01em}
+.hero{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;margin:40px 0 28px}
+.tag{color:var(--yellow);margin:10px 0 14px}
+.pill{display:inline-block;background:var(--yellow);color:var(--bg);font-family:var(--mono);font-weight:600;font-size:13px;padding:4px 10px;border-radius:999px}
+.place{color:var(--muted);font-size:14px;margin-top:8px}
+.spy{width:120px;height:auto}
+.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:8px 0 40px}
+.role{background:var(--panel);border-radius:8px;padding:14px;border-top:3px solid var(--c)}
+.role .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--c);text-transform:uppercase}
+.role h3{font-family:var(--display);font-weight:400;font-size:30px;margin:4px 0 6px;line-height:1}
+.role p{margin:0;font-size:13px;color:#cfd6d2}
+.intro{color:#cfd6d2;max-width:640px}
+form{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:24px;margin-top:20px}
+fieldset{border:0;margin:0 0 22px;padding:0}
+label.q,legend.q{display:block;font-weight:600;margin-bottom:8px}
+.req{color:var(--yellow);font-family:var(--mono);font-size:11px;margin-left:6px;font-weight:400}
+.hint{display:block;color:var(--muted);font-size:13px;font-weight:400;margin-top:2px}
+input[type=text],input[type=url],input[type=email],textarea{width:100%;background:var(--bg);color:var(--cream);border:1px solid var(--line);border-radius:6px;padding:11px 12px;font:inherit;font-size:16px}
+textarea{min-height:120px;resize:vertical}
+input:focus,textarea:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal)}
+.opts{display:grid;gap:8px}
+.opts.cols{grid-template-columns:repeat(2,1fr)}
+.opt{display:flex;gap:10px;align-items:center;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;cursor:pointer}
+.opt:has(input:checked){border-color:var(--teal);background:rgba(95,179,163,.1)}
+.opt input{accent-color:var(--teal);width:18px;height:18px;margin:0}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--c);flex:none}
+.hidden{position:absolute;left:-9999px}
+.consent{font-size:13px;color:var(--muted);margin:0 0 18px}
+button.send{background:var(--yellow);color:var(--bg);border:0;border-radius:6px;padding:14px 22px;font-family:var(--mono);font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;width:100%}
+button.send:disabled{opacity:.6;cursor:wait}
+.err{color:var(--red);font-size:13px;margin-top:6px;display:none}
+.invalid .err{display:block}
+.invalid input,.invalid textarea{border-color:var(--red)}
+.status{margin-top:14px;font-size:14px}
+.done{display:none;text-align:center;padding:40px 16px}
+.done h2{font-family:var(--display);font-weight:400;font-size:56px;margin:8px 0;line-height:1}
+.done .spy{width:96px}
+footer{margin-top:40px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;text-align:center}
+@media (max-width:640px){
+  .hero{grid-template-columns:1fr}.hero .spy{display:none}
+  .roles{grid-template-columns:1fr}
+  .opts.cols{grid-template-columns:1fr}
+  form{padding:18px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <span>AI Collective Serbia</span>
+    <span class="lang" role="group" aria-label="Jezik">
+      <button type="button" data-set-lang="sr" aria-pressed="true">SR</button>
+      <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+    </span>
+  </div>
+
+  <header class="hero">
+    <div>
+      <p class="eyebrow" data-sr="Vaša misija" data-en="Your mission">Vaša misija</p>
+      <h1>AI SPY</h1>
+      <p class="tag" data-sr="Vidim nešto što ti ne vidiš." data-en="I spy with my little AI.">Vidim nešto što ti ne vidiš.</p>
+      <span class="pill" data-sr="29. novembar 2026. · 18:00" data-en="29 November 2026 · 18:00">29. novembar 2026. · 18:00</span>
+      <div class="place" data-sr="Projekcija dokumentarca AI Gone Wild · Startit, Savska 5, Beograd" data-en="AI Gone Wild documentary screening · Startit, Savska 5, Belgrade">Projekcija dokumentarca AI Gone Wild · Startit, Savska 5, Beograd</div>
+    </div>
+    <svg class="spy" viewBox="0 0 120 170" aria-hidden="true">
+      <ellipse cx="60" cy="30" rx="44" ry="7" fill="#5b6461"/>
+      <path d="M36 30 Q38 8 60 8 Q82 8 84 30Z" fill="#5b6461"/>
+      <rect x="36" y="30" width="48" height="42" rx="10" fill="#5fb3a3"/>
+      <circle cx="60" cy="50" r="12" fill="#efe7d4"/><circle cx="62" cy="49" r="6" fill="#172124"/><circle cx="64" cy="47" r="2" fill="#efe7d4"/>
+      <path d="M32 74 H88 L98 150 H22Z" fill="#7a6a2b"/>
+      <path d="M50 74 L60 110 L70 74Z" fill="#5d5120"/>
+      <rect x="22" y="118" width="76" height="8" fill="#3b3418"/><rect x="55" y="116" width="10" height="12" fill="#f2c230"/>
+      <rect x="40" y="150" width="14" height="9" rx="3" fill="#5b6461"/><rect x="66" y="150" width="14" height="9" rx="3" fill="#5b6461"/>
+    </svg>
+  </header>
+
+  <p class="eyebrow" data-sr="Traže se · tri agenta" data-en="Wanted · three agents">Traže se · tri agenta</p>
+  <p class="intro" data-sr="Nakon filma tri stručna govornika otvaraju debatu, svako iz ugla svoje ekspertize. Znate li nekoga ko bi to uradio bolje od drugih? Koga biste rado slušali? Nominujte ga. Možete i sebe." data-en="After the film, three expert speakers open the debate, each from the angle of their own expertise. Know someone who would do it better than anyone else? Someone people would gladly listen to? Nominate them. You can nominate yourself too.">Nakon filma tri stručna govornika otvaraju debatu, svako iz ugla svoje ekspertize. Znate li nekoga ko bi to uradio bolje od drugih? Koga biste rado slušali? Nominujte ga. Možete i sebe.</p>
+
+  <section class="roles">
+    <div class="role" style="--c:var(--yellow)"><span class="k" data-sr="Agent 01 · žuta zona" data-en="Dossier 01 · yellow zone">Agent 01 · žuta zona</span><h3 data-sr="Graditelji" data-en="Builders">Graditelji</h3><p data-sr="Kako razvijati korisne AI sisteme i rešavati njihove slabosti?" data-en="How do we build useful AI systems and fix their weak spots?">Kako razvijati korisne AI sisteme i rešavati njihove slabosti?</p></div>
+    <div class="role" style="--c:var(--red)"><span class="k" data-sr="Agent 02 · crvena zona" data-en="Dossier 02 · red zone">Agent 02 · crvena zona</span><h3 data-sr="Čuvari" data-en="Guardians">Čuvari</h3><p data-sr="Koje provere, granice i odgovornosti moraju da postoje?" data-en="What checks, limits and responsibilities must exist?">Koje provere, granice i odgovornosti moraju da postoje?</p></div>
+    <div class="role" style="--c:var(--teal)"><span class="k" data-sr="Agent 03 · zelena zona" data-en="Dossier 03 · green zone">Agent 03 · zelena zona</span><h3 data-sr="Povezivači" data-en="Connectors">Povezivači</h3><p data-sr="Kako odluke utiču na korisnike, zaposlene i zajednicu?" data-en="How do decisions affect users, employees and the community?">Kako odluke utiču na korisnike, zaposlene i zajednicu?</p></div>
+  </section>
+
+  <!-- Netlify Forms: static form is detected at deploy; submitted via fetch below -->
+  <form name="nominate" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/" id="nominate" novalidate>
+    <input type="hidden" name="form-name" value="nominate">
+    <input type="hidden" name="language" value="sr" id="langField">
+    <p class="hidden"><label>Ne popunjavaj: <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+
+    <fieldset data-field="nominee">
+      <label class="q" for="nominee"><span data-sr="Ime i prezime osobe koju nominujete" data-en="Full name of the person you nominate">Ime i prezime osobe koju nominujete</span><span class="req" data-sr="obavezno" data-en="required">obavezno</span></label>
+      <input type="text" id="nominee" name="nominee" required autocomplete="off">
+      <div class="err" data-sr="Upišite ime i prezime." data-en="Please enter a name.">Upišite ime i prezime.</div>
+    </fieldset>
+
+    <fieldset data-field="linkedin">
+      <label class="q" for="linkedin"><span data-sr="LinkedIn profil" data-en="LinkedIn profile">LinkedIn profil</span><span class="req" data-sr="obavezno" data-en="required">obavezno</span></label>
+      <input type="url" id="linkedin" name="linkedin" required placeholder="https://www.linkedin.com/in/..." inputmode="url">
+      <div class="err" data-sr="Link mora da sadrži linkedin.com." data-en="The link must contain linkedin.com.">Link mora da sadrži linkedin.com.</div>
+    </fieldset>
+
+    <fieldset data-field="perspective">
+      <legend class="q"><span data-sr="Za koju perspektivu?" data-en="Which perspective?">Za koju perspektivu?</span><span class="req" data-sr="obavezno" data-en="required">obavezno</span></legend>
+      <div class="opts cols">
+        <label class="opt" style="--c:var(--yellow)"><input type="radio" name="perspective" value="Builders" required><span class="dot"></span><span data-sr="Graditelji" data-en="Builders">Graditelji</span></label>
+        <label class="opt" style="--c:var(--red)"><input type="radio" name="perspective" value="Guardians"><span class="dot"></span><span data-sr="Čuvari" data-en="Guardians">Čuvari</span></label>
+        <label class="opt" style="--c:var(--teal)"><input type="radio" name="perspective" value="Connectors"><span class="dot"></span><span data-sr="Povezivači" data-en="Connectors">Povezivači</span></label>
+        <label class="opt" style="--c:var(--muted)"><input type="radio" name="perspective" value="Not sure"><span class="dot"></span><span data-sr="Ne znam, procenite vi" data-en="Not sure, you decide">Ne znam, procenite vi</span></label>
+      </div>
+      <div class="err" data-sr="Izaberite jednu perspektivu." data-en="Pick one perspective.">Izaberite jednu perspektivu.</div>
+    </fieldset>
+
+    <fieldset data-field="why">
+      <label class="q" for="why"><span data-sr="Zašto baš ta osoba?" data-en="Why this person?">Zašto baš ta osoba?</span><span class="req" data-sr="obavezno" data-en="required">obavezno</span><span class="hint" data-sr="Dve, tri rečenice su dovoljne: šta radi i šta bi donela debati." data-en="Two or three sentences: what they do and what they would bring to the debate.">Dve, tri rečenice su dovoljne: šta radi i šta bi donela debati.</span></label>
+      <textarea id="why" name="why" required></textarea>
+      <div class="err" data-sr="Napišite bar par reči." data-en="Write at least a few words.">Napišite bar par reči.</div>
+    </fieldset>
+
+    <fieldset data-field="aware">
+      <legend class="q" data-sr="Da li ta osoba zna da je nominujete?" data-en="Does this person know you are nominating them?">Da li ta osoba zna da je nominujete?</legend>
+      <div class="opts">
+        <label class="opt" style="--c:var(--teal)"><input type="radio" name="aware" value="Yes"><span data-sr="Da" data-en="Yes">Da</span></label>
+        <label class="opt" style="--c:var(--teal)"><input type="radio" name="aware" value="No"><span data-sr="Ne" data-en="No">Ne</span></label>
+        <label class="opt" style="--c:var(--teal)"><input type="radio" name="aware" value="Self-nomination"><span data-sr="Nominujem sebe" data-en="I am nominating myself">Nominujem sebe</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset data-field="contact">
+      <label class="q" for="contact"><span data-sr="Vaše ime i kontakt" data-en="Your name and contact">Vaše ime i kontakt</span><span class="hint" data-sr="Opciono, ako možete da nas upoznate." data-en="Optional, if you can introduce us.">Opciono, ako možete da nas upoznate.</span></label>
+      <input type="text" id="contact" name="contact" autocomplete="name email">
+    </fieldset>
+
+    <p class="consent" data-sr="Rok: petak, 6. novembar, 23:59. Podatke koristimo samo za izbor govornika za ovaj događaj i brišemo ih posle događaja." data-en="Deadline: Friday, 6 November, 23:59. We use this data only to select speakers for this event and delete it afterwards.">Rok: petak, 6. novembar, 23:59. Podatke koristimo samo za izbor govornika za ovaj događaj i brišemo ih posle događaja.</p>
+
+    <button class="send" type="submit" data-sr="Pošalji nominaciju" data-en="Send nomination">Pošalji nominaciju</button>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+  </form>
+
+  <section class="done" id="done" aria-live="polite">
+    <svg class="spy" viewBox="0 0 120 170" aria-hidden="true"><use href="#"/><ellipse cx="60" cy="30" rx="44" ry="7" fill="#5b6461"/><path d="M36 30 Q38 8 60 8 Q82 8 84 30Z" fill="#5b6461"/><rect x="36" y="30" width="48" height="42" rx="10" fill="#5fb3a3"/><circle cx="60" cy="50" r="12" fill="#efe7d4"/><circle cx="62" cy="49" r="6" fill="#172124"/><path d="M32 74 H88 L98 150 H22Z" fill="#7a6a2b"/><rect x="55" y="116" width="10" height="12" fill="#f2c230"/></svg>
+    <p class="eyebrow" data-sr="Poruka primljena" data-en="Message received">Poruka primljena</p>
+    <h2 data-sr="Agent je na listi." data-en="Agent logged.">Agent je na listi.</h2>
+    <p class="intro" style="margin:0 auto" data-sr="Hvala! Javljamo se izabranim govornicima do 10. novembra. Vidimo se 29. novembra na Startitu." data-en="Thank you! We will contact the selected speakers by 10 November. See you on 29 November at Startit.">Hvala! Javljamo se izabranim govornicima do 10. novembra. Vidimo se 29. novembra na Startitu.</p>
+    <p id="previewNote" class="place"></p>
+  </section>
+
+  <footer>AI Collective Serbia</footer>
+</div>
+
+<script>
+(function(){
+  var lang = 'sr';
+  function setLang(l){
+    lang = l;
+    document.documentElement.lang = l;
+    document.getElementById('langField').value = l;
+    document.querySelectorAll('[data-'+l+']').forEach(function(el){ el.textContent = el.getAttribute('data-'+l); });
+    document.querySelectorAll('[data-set-lang]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.setLang===l); });
+    document.title = l==='sr' ? 'AI SPY · Nominuj agenta' : 'AI SPY · Nominate an agent';
+  }
+  document.querySelectorAll('[data-set-lang]').forEach(function(b){ b.addEventListener('click', function(){ setLang(b.dataset.setLang); }); });
+  if (/[?&]lang=en/.test(location.search)) setLang('en');
+
+  var form = document.getElementById('nominate');
+  var status = document.getElementById('status');
+  var btn = form.querySelector('button.send');
+
+  function validate(){
+    var ok = true;
+    function mark(name, bad){ var f=form.querySelector('[data-field="'+name+'"]'); f.classList.toggle('invalid', bad); if(bad) ok=false; }
+    mark('nominee', !form.nominee.value.trim());
+    mark('linkedin', !/linkedin\.com/i.test(form.linkedin.value));
+    mark('perspective', !form.querySelector('input[name=perspective]:checked'));
+    mark('why', form.why.value.trim().length < 3);
+    if(!ok){ var first=form.querySelector('.invalid input, .invalid textarea'); if(first) first.focus(); }
+    return ok;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    status.textContent = '';
+    if(!validate()) return;
+    btn.disabled = true;
+    var body = new URLSearchParams(new FormData(form)).toString();
+    fetch('/', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: body })
+      .then(function(r){
+        if(r.ok) return showDone(false);
+        // Not on Netlify (local / preview): show success screen but say nothing was sent
+        if(!/netlify/i.test(location.hostname)) return showDone(true);
+        throw new Error(r.status);
+      })
+      .catch(function(){
+        if(!/netlify/i.test(location.hostname) || location.protocol==='file:') return showDone(true);
+        btn.disabled = false;
+        status.style.color = 'var(--red)';
+        status.textContent = lang==='sr' ? 'Slanje nije uspelo. Pokušajte ponovo za minut.' : 'Sending failed. Please try again in a minute.';
+      });
+  });
+
+  function showDone(preview){
+    form.style.display = 'none';
+    document.getElementById('done').style.display = 'block';
+    if(preview) document.getElementById('previewNote').textContent = lang==='sr' ? '(Pregled: ovde se ništa ne šalje. Prava forma radi tek na Netlify-u.)' : '(Preview: nothing is sent here. The real form works only on Netlify.)';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+})();
+</script>
+</body>
+</html>
